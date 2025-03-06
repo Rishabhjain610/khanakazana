@@ -15,4 +15,4 @@ KhanaKazana is a recipe discovery app that allows users to search for a wide var
 - **AI Integration**: Gemini AI
 - **UI Components**: MakeKai UI, Hyper UI
 
-##Demo
+## Demo
