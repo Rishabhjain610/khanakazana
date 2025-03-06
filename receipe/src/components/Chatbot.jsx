@@ -1,21 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import aibotimg from "../assets/aibotimg.png";
-import user from "../assets/user.png"
-import img from "../assets/img.svg"
-import submit from "../assets/submit.svg"
+import user from "../assets/user.png";
+import img from "../assets/img.svg";
+import submit from "../assets/submit.svg";
+
 const Chatbot = () => {
   const [prompt, setPrompt] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
   const [userFile, setUserFile] = useState({ mime_type: null, data: null });
   const [loading, setLoading] = useState(false);
+  const chatContainerRef = useRef(null);
 
-  const Api_Url =
-    "";
+  // Use correct environment variable based on bundler
+  const Api_Url = import.meta.env.VITE_API_URL || process.env.REACT_APP_API_URL;
+
+  useEffect(() => {
+    chatContainerRef.current?.scrollTo({
+      top: chatContainerRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [chatHistory]);
 
   const generateResponse = async (aiResponseElement, userMessage) => {
     console.log("Sending input to API:", userMessage);
+    setLoading(true);
 
-    const RequestOption = {
+    const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -31,16 +41,15 @@ const Chatbot = () => {
     };
 
     try {
-      setLoading(true);
-      const response = await fetch(Api_Url, RequestOption);
+      const response = await fetch(Api_Url, requestOptions);
       const data = await response.json();
 
       if (data.candidates && data.candidates.length > 0) {
         const apiResponse = data.candidates[0].content.parts[0].text
           .replace(/\*\*(.*?)\*\*/g, "$1")
           .trim();
-        console.log("API Response:", apiResponse);
 
+        console.log("API Response:", apiResponse);
         setTimeout(() => {
           aiResponseElement.innerText = apiResponse;
         }, 200);
@@ -68,17 +77,12 @@ const Chatbot = () => {
         <img
           src={isUser ? user : aibotimg}
           alt="User or AI"
-          className="bg-white rounded-full drop-shadow-md"
-          style={{ width: 50, height: 50 }}
+          className="bg-white rounded-full drop-shadow-md w-[50px] h-[50px]"
         />
         <div
-          className={`p-4 ${
-            isUser ? "bg-black text-white" : "bg-gray-200"
-          }`}
+          className={`p-4 ${isUser ? "bg-black text-white" : "bg-gray-200"}`}
           style={{
-            borderRadius: isUser
-              ? "40px 0px 40px 40px"
-              : "0px 40px 40px 40px",
+            borderRadius: isUser ? "40px 0px 40px 40px" : "0px 40px 40px 40px",
             boxShadow: "2px 2px 10px black",
           }}
         >
@@ -114,14 +118,9 @@ const Chatbot = () => {
 
       if (lastChatBox) {
         const aiPlaceholder = lastChatBox.querySelector(".ai-chat");
-
         if (aiPlaceholder) {
           generateResponse(aiPlaceholder, message);
-        } else {
-          console.error("AI placeholder not found in the last chat box.");
         }
-      } else {
-        console.error("No AI chat box found.");
       }
     }, 600);
 
@@ -143,10 +142,10 @@ const Chatbot = () => {
   const handleSendMessage = () => {
     if (prompt.trim()) {
       handleChatResponse(prompt.trim());
-      setPrompt(""); // Reset prompt after sending
+      setPrompt("");
     } else if (userFile.data) {
       handleChatResponse("Image uploaded.");
-      setUserFile({ mime_type: null, data: null }); // Clear file input after sending
+      setUserFile({ mime_type: null, data: null });
     }
   };
 
@@ -158,14 +157,14 @@ const Chatbot = () => {
 
   return (
     <div className="bg-red-500 h-[108vh]">
-      <div
-        className="text-center text-white text-4xl md:text-5xl font-semibold py-4"
-        style={{ fontFamily: "Courier New, Courier, monospace" }}
-      >
+      <div className="text-center text-white text-4xl md:text-5xl font-semibold py-4 font-mono">
         AI Chatbot
       </div>
 
-      <div className="chat-container w-[95%] md:w-[90%] h-[70vh] md:h-[80vh] bg-white my-4 rounded-3xl mx-auto p-5 overflow-y-auto">
+      <div
+        className="chat-container w-[95%] md:w-[90%] h-[70vh] md:h-[80vh] bg-white my-4 rounded-3xl mx-auto p-5 overflow-y-auto"
+        ref={chatContainerRef}
+      >
         {chatHistory.map((chat, index) => (
           <div key={index} className={chat.isUser ? "user-chat-box" : "ai-chat-box"}>
             {createChatBox(chat.message, chat.isUser, chat.file)}
@@ -173,7 +172,7 @@ const Chatbot = () => {
         ))}
       </div>
 
-      <div className="input-container mx-auto w-[95%] md:w-[90%] h-[9vh] bg-white rounded-3xl flex flex-wrap items-center justify-center gap-4">
+      <div className="input-container mx-auto w-[95%] md:w-[90%] h-[9vh] bg-white rounded-3xl flex flex-wrap items-center justify-center gap-4 p-2">
         <input
           type="text"
           placeholder="Message..."
@@ -183,7 +182,6 @@ const Chatbot = () => {
           className="bg-blue-50 outline-none w-[70%] md:w-[50%] h-10 rounded-full p-3"
         />
         <button
-          id="image"
           className="h-10 w-10 rounded-full bg-blue-50 hover:bg-blue-100 flex items-center justify-center overflow-hidden"
           onClick={() => document.getElementById("fileInput").click()}
         >
@@ -205,7 +203,6 @@ const Chatbot = () => {
           />
         </button>
         <button
-          id="submit"
           className="h-10 w-10 rounded-full bg-blue-50 hover:bg-blue-100 flex items-center justify-center"
           onClick={handleSendMessage}
         >
