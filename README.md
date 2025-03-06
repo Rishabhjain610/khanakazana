@@ -16,3 +16,4 @@ KhanaKazana is a recipe discovery app that allows users to search for a wide var
 - **UI Components**: MakeKai UI, Hyper UI
 
 ## Demo
+https://github.com/user-attachments/assets/5f220879-dd55-4d8e-b46b-314d0e22a953
