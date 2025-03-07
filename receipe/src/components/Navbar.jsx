@@ -54,9 +54,7 @@ const Navbar = () => {
           <li className='py-3 text-[16px] hover:text-[#FFD700]'>
             <NavLink to="/" onClick={() => setIsOpen(false)}>Home</NavLink>
           </li>
-          <li className='py-3 text-[16px] hover:text-[#FFD700]'>
-            <NavLink to="/about" onClick={() => setIsOpen(false)}>About</NavLink>
-          </li>
+          
           <li className='py-3 text-[16px] hover:text-[#FFD700]'>
             <NavLink to="/receipe" onClick={() => setIsOpen(false)}>Receipe</NavLink>
           </li>
