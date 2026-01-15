@@ -1,3 +1,5 @@
+## Demo
+https://github.com/user-attachments/assets/5f220879-dd55-4d8e-b46b-314d0e22a953
 # KhanaKazana
 
 KhanaKazana is a recipe discovery app that allows users to search for a wide variety of recipes and interact with an AI chatbot for cooking guidance. Built using React, Tailwind CSS, and Gemini AI, it provides an intuitive and modern experience for food enthusiasts.
@@ -15,5 +17,4 @@ KhanaKazana is a recipe discovery app that allows users to search for a wide var
 - **AI Integration**: Gemini AI
 - **UI Components**: MakeKai UI, Hyper UI
 
-## Demo
-https://github.com/user-attachments/assets/5f220879-dd55-4d8e-b46b-314d0e22a953
+
